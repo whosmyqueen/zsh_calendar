@@ -1,18 +1,14 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'calendar_weekday.dart';
-import 'calendar_sliver_delegate.dart';
-import 'calendar_carousel.dart';
 
+import 'calendar_carousel.dart';
+import 'calendar_sliver_delegate.dart';
+import 'calendar_weekday.dart';
 
 class CalendarScroll extends StatefulWidget {
-
-
-  final DateTime startTime;  // 启始日期
-  final DateTime endTime;  // 结束日期
-  final DateTime currentPageTime;  // 当前要显示的日期, 默认当前时间
+  final DateTime startTime; // 启始日期
+  final DateTime endTime; // 结束日期
+  final DateTime currentPageTime; // 当前要显示的日期, 默认当前时间
 
   final CurrentPageDate currentPageDate;
 
@@ -23,38 +19,29 @@ class CalendarScroll extends StatefulWidget {
   final CalendarController calendarController;
   final List<Widget> slivers;
 
-
   CalendarScroll({
-
-    @required this.startTime,
-    @required this.endTime,
-    @required this.weekdayHeader,
-
-    this.currentPageDate,
-    this.dayWidgetBuilder,
+    required this.startTime,
+    required this.endTime,
+    required this.weekdayHeader,
+    required this.currentPageDate,
+    required this.dayWidgetBuilder,
     this.childAspectRatio = 1,
     calendarController,
-
     currentPageTime,
     pageController,
-    this.slivers,
-
-  }) :  assert(startTime != null),
-        assert(endTime != null),
-        assert(weekdayHeader != null),
-        this.currentPageTime = currentPageTime ?? DateTime.now(),
-        this.calendarController =  calendarController ?? CalendarController(),
+    required this.slivers,
+  })  : this.currentPageTime = currentPageTime ?? DateTime.now(),
+        this.calendarController = calendarController ?? CalendarController(),
         assert(!(currentPageTime.isBefore(startTime))),
         assert(!(endTime.isBefore(startTime))),
         assert(!(endTime.isBefore(currentPageTime)));
-
 
   @override
   _CalendarScrollState createState() => _CalendarScrollState();
 }
 
-class _CalendarScrollState extends State<CalendarScroll> with AutomaticKeepAliveClientMixin {
-
+class _CalendarScrollState extends State<CalendarScroll>
+    with AutomaticKeepAliveClientMixin {
 //  static final List<String> weekList = ["一","二","三","四","五","六","日"];
 //
 //  DateTime  _selectedDate = DateTime(2020, 9, 1);
@@ -99,16 +86,14 @@ class _CalendarScrollState extends State<CalendarScroll> with AutomaticKeepAlive
   bool get wantKeepAlive => true;
 
   Widget build(BuildContext context) {
-
     super.build(context);
 
     print("=========== $widget.currentPageTime ");
 
-    Widget calendarWidget =  SliverPersistentHeader(
-
+    Widget calendarWidget = SliverPersistentHeader(
       delegate: CalendarSliverDelegate(
         startTime: widget.startTime,
-        endTime:widget.endTime,
+        endTime: widget.endTime,
         currentPageTime: widget.currentPageTime,
         weekdayHeader: widget.weekdayHeader,
         dayWidgetBuilder: widget.dayWidgetBuilder,
@@ -119,19 +104,16 @@ class _CalendarScrollState extends State<CalendarScroll> with AutomaticKeepAlive
       pinned: true,
     );
 
-    List<Widget> child = List();
+    List<Widget> child = List.empty();
 
     child.add(calendarWidget);
 
-    if(widget.slivers.length > 0) {
+    if (widget.slivers.length > 0) {
       child.addAll(widget.slivers);
     }
 
     return CustomScrollView(
-
       slivers: child,
     );
   }
 }
-
-
